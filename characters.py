@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 #    Filename: characters.py
 #
-#      Author: David C. Drake (www.davidcdrake.com)
+#      Author: David C. Drake (http://davidcdrake.com)
 #
 # Description: Manages game characters -- including the player character and
 #              non-player characters (NPCs) -- for the "Toad's Adventure" game.

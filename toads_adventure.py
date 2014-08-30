@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 #    Filename: toads_adventure.py
 #
-#      Author: David C. Drake (www.davidcdrake.com)
+#      Author: David C. Drake (http://davidcdrake.com)
 #
 # Description: Contains a 'ToadsAdventure' class for managing the "Toad's
 #              Adventure" platformer game. Developed using Python 2.7.2 and

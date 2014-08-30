@@ -2,7 +2,7 @@ toads-adventure-py
 ==================
 
 A 2D platformer inspired by Super Mario Bros. 2, developed using Python 2.7 and
-PyGame 1.9 by David C. Drake (www.davidcdrake.com).
+PyGame 1.9 by David C. Drake (http://davidcdrake.com).
 
 To Launch the Game
 ------------------

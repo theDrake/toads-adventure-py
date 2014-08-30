@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 #    Filename: map.py
 #
-#      Author: David C. Drake (www.davidcdrake.com)
+#      Author: David C. Drake (http://davidcdrake.com)
 #
 # Description: Handles maps (a.k.a., levels) for the Toad's Adventure game.
 #              Developed using Python 2.7.2 and PyGame 1.9.2a0.
