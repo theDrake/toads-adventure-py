@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
 #------------------------------------------------------------------------------
 #    Filename: config.py
 #
 #      Author: David C. Drake (http://davidcdrake.com)
 #
 # Description: Configuration file for the Toad's Adventure game. Developed
-#              using Python 2.7.2.
+#              using Python 2.7.
 #------------------------------------------------------------------------------
 
 # Name of the game:

@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
 #------------------------------------------------------------------------------
 #    Filename: game.py
 #
 #      Author: David C. Drake (http://davidcdrake.com)
 #
 # Description: Contains an abstract 'Game' class for windowed games. Developed
-#              using Python 2.7.2.
+#              using Python 2.7.
 #------------------------------------------------------------------------------
 
 import pygame

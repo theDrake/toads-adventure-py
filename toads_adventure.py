@@ -1,13 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 
 #------------------------------------------------------------------------------
 #    Filename: toads_adventure.py
 #
 #      Author: David C. Drake (http://davidcdrake.com)
 #
-# Description: Contains a 'ToadsAdventure' class for managing the "Toad's
-#              Adventure" platformer game. Developed using Python 2.7.2 and
-#              PyGame 1.9.2a0.
+# Description: Contains a 'ToadsAdventure' class for managing the Toad's
+#              Adventure game. Developed using Python 2.7 and PyGame 1.9.
 #------------------------------------------------------------------------------
 
 import sys
@@ -21,7 +20,7 @@ from config import *
 #------------------------------------------------------------------------------
 #       Class: ToadsAdventure
 #
-# Description: Manages the "Toad's Adventure" platformer game.
+# Description: Manages the Toad's Adventure platformer game.
 #------------------------------------------------------------------------------
 class ToadsAdventure(game.Game):
     #--------------------------------------------------------------------------
@@ -189,7 +188,6 @@ class ToadsAdventure(game.Game):
 #     Outputs: None.
 #------------------------------------------------------------------------------
 def main():
-    # Check the command-line arguments:
     if len(sys.argv) == 2:
         startingLevel = sys.argv[1]
     else:

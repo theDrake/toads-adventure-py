@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
 #------------------------------------------------------------------------------
 #    Filename: tileset.py
 #
 #      Author: David C. Drake (http://davidcdrake.com)
 #
 # Description: Handles tile images for the Toad's Adventure game. Developed
-#              using Python 2.7.2 and PyGame 1.9.2a0.
+#              using Python 2.7 and PyGame 1.9.
 #------------------------------------------------------------------------------
 
 import pygame
