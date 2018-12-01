@@ -1,62 +1,54 @@
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #    Filename: game.py
 #
-#      Author: David C. Drake (http://davidcdrake.com)
+#      Author: David C. Drake (https://davidcdrake.com)
 #
-# Description: Contains an abstract 'Game' class for windowed games. Developed
-#              using Python 2.7.
-#------------------------------------------------------------------------------
+# Description: Contains an abstract 'Game' class (Python 2.7 and Pygame 1.9).
+#-------------------------------------------------------------------------------
 
 import pygame
-import pygame.locals
+from pygame import display, time, event
 
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #       Class: Game
 #
-# Description: An abstract class for windowed games.
+# Description: An abstract class for fullscreen games.
 #
-#     Methods: __init__, gameLogic (virtual), paint (virtual), mainLoop
-#------------------------------------------------------------------------------
+#     Methods: __init__, game_logic (virtual), paint (virtual), main_loop
+#-------------------------------------------------------------------------------
 class Game:
-    #--------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #      Method: __init__
     #
-    # Description: Initializes a windowed game's basic stats. For the display,
-    #              double-buffering is used for smooth animation and alpha
-    #              blending is applied.
+    # Description: Initializes the game's display mode and basic stats.
     #
-    #      Inputs: name   - Title displayed along the top of the window.
-    #              width  - Window width, in pixels.
-    #              height - Window height, in pixels.
-    #              fps    - Frames per second.
+    #      Inputs: fps - Desired frames per second.
     #
     #     Outputs: None.
-    #--------------------------------------------------------------------------
-    def __init__(self, name, width, height, fps):
-        self.width  = width
-        self.height = height
-        self.fps    = fps
-        self.on     = True
-        self.screen = pygame.display.set_mode((width, height),
-                                              pygame.locals.DOUBLEBUF |
-                                              pygame.locals.SRCALPHA)
-        pygame.display.set_caption(name)
+    #---------------------------------------------------------------------------
+    def __init__(self, fps=60):
+        self.fps = fps
+        self.screen = display.set_mode((0, 0), pygame.FULLSCREEN |
+                                       pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.width = display.Info().current_w
+        self.height = display.Info().current_h
+        self.on = True
 
-    #--------------------------------------------------------------------------
-    #      Method: gameLogic
+    #---------------------------------------------------------------------------
+    #      Method: game_logic
     #
     # Description: Virtual method intended to perform underlying game logic
     #              according to player input.
     #
-    #      Inputs: keys    - Keys currently pressed.
-    #              newKeys - Keys currently pressed that weren't before.
+    #      Inputs: keys     - Keys currently pressed.
+    #              new_keys - Keys currently pressed that weren't before.
     #
     #     Outputs: Raises an error if not implemented by a child class.
-    #--------------------------------------------------------------------------
-    def gameLogic(self, keys, newKeys):
+    #---------------------------------------------------------------------------
+    def game_logic(self, keys, new_keys):
         raise NotImplementedError()
 
-    #--------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #      Method: paint
     #
     # Description: Virtual method intended to draw images to the screen.
@@ -64,39 +56,37 @@ class Game:
     #      Inputs: surface - The surface on which to draw.
     #
     #     Outputs: Raises an error if not implemented by a child class.
-    #--------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def paint(self, surface):
         raise NotImplementedError()
 
-    #--------------------------------------------------------------------------
-    #      Method: mainLoop
+    #---------------------------------------------------------------------------
+    #      Method: main_loop
     #
-    # Description: The game's main loop. Manages game speed, 'QUIT' events,
-    #              and keyboard input (if the escape key has been pressed, this
-    #              will be treated as a 'QUIT' event). Calls the 'gameLogic'
-    #              and 'draw' methods, then updates the display.
+    # Description: Manages game speed, 'QUIT' events, and keyboard input. Calls
+    #              'game_logic' and 'draw', then updates the display.
     #
     #      Inputs: None.
     #
     #     Outputs: None.
-    #--------------------------------------------------------------------------
-    def mainLoop(self):
-        clock = pygame.time.Clock()
+    #---------------------------------------------------------------------------
+    def main_loop(self):
+        clock = time.Clock()
         keys = set()
         while True:
             clock.tick(self.fps)
-            newKeys = set()
-            for e in pygame.event.get():
-                if e.type == pygame.QUIT or \
-                   (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE):
+            new_keys = set()
+            for e in event.get():
+                if (e.type == pygame.QUIT or
+                    (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE)):
                     pygame.quit()
                     return
                 if e.type == pygame.KEYDOWN:
                     keys.add(e.key)
-                    newKeys.add(e.key)
+                    new_keys.add(e.key)
                 if e.type == pygame.KEYUP:
                     keys.discard(e.key)
             if self.on:
-                self.gameLogic(keys, newKeys)
+                self.game_logic(keys, new_keys)
                 self.paint(self.screen)
-            pygame.display.flip()
+                display.flip()

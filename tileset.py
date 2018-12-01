@@ -1,164 +1,89 @@
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #    Filename: tileset.py
 #
-#      Author: David C. Drake (http://davidcdrake.com)
+#      Author: David C. Drake (https://davidcdrake.com)
 #
 # Description: Handles tile images for the Toad's Adventure game. Developed
 #              using Python 2.7 and PyGame 1.9.
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
-import pygame
+from pygame import image, rect
 from config import *
 
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #       Class: Tileset
 #
-# Description: Responsible for loading sets of tiles, providing information
-#              about tiles, and mapping tile numbers to tile images.
+# Description: Responsible for preparing and providing tile images.
 #
-#     Methods: __init__, getTile, getTileSize, getTileCoordsAt, isSolid, isIcy,
-#              isClimbable, _validTileNum
-#------------------------------------------------------------------------------
+#     Methods: __init__, get_image, get_tile_coords_at, _is_valid_tile_num
+#-------------------------------------------------------------------------------
 class Tileset:
-    #--------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #      Method: __init__
     #
-    # Description: Initializes a tileset by loading an image file and
-    #              extracting individual tile surfaces from it.
+    # Description: Loads an image file and extracts tile surfaces from it.
     #
-    #      Inputs: filename - Name of an image file (which should contain a set
-    #                         of tiles).
-    #              tileSize - Length of a side of a single tile.
+    #      Inputs: filename  - Name of an image file.
+    #              tile_size - Length of a side of a single tile.
     #
     #     Outputs: None.
-    #--------------------------------------------------------------------------
-    def __init__(self, filename, tileSize):
-        # Load the image from the file and store its dimensions:
-        image = pygame.image.load(filename)
-        (self.imageWidth, self.imageHeight) = image.get_size()
-
-        # Calculate the number of columns and rows in the tileset image:
-        self.tileSize = tileSize
-        self.cols = self.imageWidth  / self.tileSize
-        self.rows = self.imageHeight / self.tileSize
-
-        # Extract each individual tile surface from the image:
+    #---------------------------------------------------------------------------
+    def __init__(self, filename, tile_size):
+        tileset_image = image.load(filename)
+        (self.image_width, self.image_height) = tileset_image.get_size()
+        self.tile_size = tile_size
+        self.cols = self.image_width  / self.tile_size
+        self.rows = self.image_height / self.tile_size
         self.tiles = []
         y = 0
         for r in range(self.rows):
             x = 0
             for c in range(self.cols):
-                rect = pygame.rect.Rect(x, y, self.tileSize, self.tileSize)
-                self.tiles.append(image.subsurface(rect))
-                x += self.tileSize
-            y += self.tileSize
+                tile_rect = rect.Rect(x, y, self.tile_size, self.tile_size)
+                self.tiles.append(tileset_image.subsurface(tile_rect))
+                x += self.tile_size
+            y += self.tile_size
 
-    #--------------------------------------------------------------------------
-    #      Method: getTile
+    #---------------------------------------------------------------------------
+    #      Method: get_image
     #
-    # Description: Given a tile number, returns the corresponding tile image
-    #              (in the form of a 'Rect' object).
+    # Description: Given a tile number, returns the corresponding tile image in
+    #              the form of a 'Rect' object.
     #
-    #      Inputs: tileNum - .
+    #      Inputs: tile_num - Tile number of interest.
     #
-    #     Outputs: The tile ('Rect' object) corresponding to the tile number,
-    #              or 'None' if the number is invalid.
-    #--------------------------------------------------------------------------
-    def getTile(self, tileNum):
-        if self._validTileNum(tileNum):
-            return self.tiles[tileNum]
+    #     Outputs: The 'Rect' object corresponding to the tile number (or 'None'
+    #              if the number is invalid).
+    #---------------------------------------------------------------------------
+    def get_image(self, tile_num):
+        if self._is_valid_tile_num(tile_num):
+            return self.tiles[tile_num]
         return None
 
-    #--------------------------------------------------------------------------
-    #      Method: getTileSize
-    #
-    # Description: Returns the length of one side of a tile.
-    #
-    #      Inputs: None.
-    #
-    #     Outputs: The length of one side of a tile.
-    #--------------------------------------------------------------------------
-    def getTileSize(self):
-        return self.tileSize
-
-    #--------------------------------------------------------------------------
-    #      Method: getTileCoordsAt
+    #---------------------------------------------------------------------------
+    #      Method: get_tile_coords_at
     #
     # Description: Given a tuple of pixel coordinates, returns a corresponding
-    #              tuple of tile-size coordinates.
+    #              tuple of tile coordinates.
     #
     #      Inputs: x - Horizontal pixel coordinate.
     #              y - Vertical pixel coordinate.
     #
-    #     Outputs: A tuple containing tile-size coordinates.
-    #--------------------------------------------------------------------------
-    def getTileCoordsAt(self, x, y):
-        return (x / self.tileSize, y / self.tileSize)
+    #     Outputs: A tuple containing tile coordinates.
+    #---------------------------------------------------------------------------
+    def get_tile_coords_at(self, x, y):
+        return (x / self.tile_size, y / self.tile_size)
 
-    #--------------------------------------------------------------------------
-    #      Method: isSolid
+    #---------------------------------------------------------------------------
+    #      Method: _is_valid_tile_num
     #
-    # Description: Returns 'True' if the tile is completely solid.
+    # Description: Returns 'True' if tile number's within tileset parameters.
     #
-    #      Inputs: tileNum - Tile number for the tile of interest.
+    #      Inputs: tile_num - Tile number of interest.
     #
-    #     Outputs: 'True' if the tile is in the SOLID_TILES set, 'False'
-    #              otherwise.
-    #--------------------------------------------------------------------------
-    def isSolid(self, tileNum):
-        return tileNum in SOLID_TILES
-
-    #--------------------------------------------------------------------------
-    #      Method: isNonSolid
-    #
-    # Description: Returns 'True' if the tile is non-solid (i.e., neither solid
-    #              nor top-solid).
-    #
-    #      Inputs: tileNum - Tile number for the tile of interest.
-    #
-    #     Outputs: 'True' if the tile is in the NON_SOLID_TILES set, 'False'
-    #              otherwise.
-    #--------------------------------------------------------------------------
-    def isNonSolid(self, tileNum):
-        return tileNum in NON_SOLID_TILES or tileNum is -1
-
-    #--------------------------------------------------------------------------
-    #      Method: isIcy
-    #
-    # Description: Returns 'True' if the tile is ice-covered.
-    #
-    #      Inputs: tileNum - Tile number for the tile of interest.
-    #
-    #     Outputs: 'True' if the tile is in the ICY_TILES set, 'False'
-    #              otherwise.
-    #--------------------------------------------------------------------------
-    def isIcy(self, tileNum):
-        return tileNum in ICY_TILES
-
-    #--------------------------------------------------------------------------
-    #      Method: isClimbable
-    #
-    # Description: Returns 'True' if the tile represents a climbable object.
-    #
-    #      Inputs: tileNum - Tile number for the tile of interest.
-    #
-    #     Outputs: 'True' if the tile is in the CLIMBABLE_TILES set, 'False'
-    #              otherwise.
-    #--------------------------------------------------------------------------
-    def isClimbable(self, tileNum):
-        return tileNum in CLIMBABLE_TILES
-
-    #--------------------------------------------------------------------------
-    #      Method: _validTileNum
-    #
-    # Description: Returns 'True' if the tile number is within the parameters
-    #              of the tileset.
-    #
-    #      Inputs: tileNum - Tile number of interest.
-    #
-    #     Outputs: 'True' if the tile is valid, 'False' otherwise.
-    #--------------------------------------------------------------------------
-    def _validTileNum(self, tileNum):
-        if tileNum < 0 or tileNum >= (self.rows * self.cols):
+    #     Outputs: 'True' if the tile number is valid.
+    #---------------------------------------------------------------------------
+    def _is_valid_tile_num(self, tile_num):
+        if tile_num < 0 or tile_num >= (self.rows * self.cols):
             return False
         return True

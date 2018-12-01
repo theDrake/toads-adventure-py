@@ -1,117 +1,112 @@
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #    Filename: map.py
 #
-#      Author: David C. Drake (http://davidcdrake.com)
+#      Author: David C. Drake (https://davidcdrake.com)
 #
-# Description: Handles maps (i.e., levels) for the Toad's Adventure game.
-#              Developed using Python 2.7 and PyGame 1.9.
-#------------------------------------------------------------------------------
+# Description: Handles maps/levels for the Toad's Adventure game. Developed
+#              using Python 2.7 and PyGame 1.9.
+#-------------------------------------------------------------------------------
 
 import pygame
 from config import *
 
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #       Class: Map
 #
 # Description: A rectangular grid of tiles representing a game map/level.
 #
-#     Methods: __init__, getSize, getScreenSize, getTileNumber,
-#              getTileNumberAt, getTile, isSolidAt, draw
-#------------------------------------------------------------------------------
+#     Methods: __init__, get_size, get_tile_number, get_tile_number_at,
+#              get_tile, is_solid_at, is_non_solid_at, draw
+#-------------------------------------------------------------------------------
 class Map:
-    #--------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #      Method: __init__
     #
-    # Description: Initializes the map/level by reading a map file.
+    # Description: Sets up a map/level by reading a map file.
     #
-    #      Inputs: level        - Number corresponding to the current level.
-    #              tiles        - Tileset object to supply tile images.
-    #              screen       - Surface object that will render the map.
-    #              screenWidth  - Width of the game screen (in tiles).
-    #              screenHeight - Height of the game screen (in tiles).
+    #      Inputs: level         - Number corresponding to the desired level.
+    #              tiles         - Tileset object to supply tile images.
+    #              screen        - Surface object for rendering the map.
+    #              screen_width  - Total display width, in pixels.
+    #              screen_height - Total display height, in pixels.
     #
     #     Outputs: None.
-    #--------------------------------------------------------------------------
-    def __init__(self, level, tiles, screen, screenWidth, screenHeight):
+    #---------------------------------------------------------------------------
+    def __init__(self, level, tiles, screen, screen_width, screen_height):
+        if level < 1 or level > NUM_LEVELS:
+            level = 1
         self.tiles = tiles
         self.screen = screen
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
+        self.screen_width = screen_width
+        self.screen_height = screen_height
 
-        # Read map data from file:
         fileIn = open(MAPS[level], 'r')
         self.map = eval(fileIn.read())
         fileIn.close()
 
-        # Determine map width/height (all rows should be of equal length):
-        self.mapHeight = len(self.map)
-        lowestMapWidth = len(self.map[0])
-        for i in range(self.mapHeight):
-            mapWidth = len(self.map[i])
-            if mapWidth != lowestMapWidth:
-                print 'Error in row %d of %s (length )' % (i,
-                                                           MAPS[level],
-                                                           mapWidth)
-                if mapWidth < lowestMapWidth:
-                    lowestMapWidth = mapWidth
-        self.mapWidth = lowestMapWidth
+        self.map_height = len(self.map)
+        lowest_map_width = len(self.map[0])
+        for i in range(self.map_height):
+            map_width = len(self.map[i])
+            if map_width != lowest_map_width: # rows should have equal length
+                print('Error in row %d of %s (length %d)' % (i, MAPS[level],
+                      map_width))
+                if map_width < lowest_map_width:
+                    lowest_map_width = map_width
+        self.map_width = lowest_map_width
 
-        # Determine background color:
-        self.bgColor = pygame.Color(MAP_BACKGROUNDS[level])
+        self.bg_color = pygame.Color(MAP_BACKGROUNDS[level])
+        self.player_start_location = (
+            (PLAYER_START_LOCATION[level][0] - 1) * MAP_TILE_SIZE,
+            (PLAYER_START_LOCATION[level][1] - 1) * MAP_TILE_SIZE)
 
-        # Determine player's starting location:
-        self.playerStartingPosition = ((STARTING_LOCATIONS[level][0] - 1) *
-                                       MAP_TILE_SIZE,
-                                       (STARTING_LOCATIONS[level][1] - 1) *
-                                       MAP_TILE_SIZE)
-
-    #--------------------------------------------------------------------------
-    #      Method: getSize
+    #---------------------------------------------------------------------------
+    #      Method: get_size
     #
-    # Description: Returns the width and height of the map, in tuple form.
+    # Description: Returns map width and height in tuple form.
     #
     #      Inputs: None.
     #
     #     Outputs: A tuple containing the map's width and height.
-    #--------------------------------------------------------------------------
-    def getSize(self):
-        return (self.mapWidth, self.mapHeight)
+    #---------------------------------------------------------------------------
+    def get_size(self):
+        return (self.map_width, self.map_height)
 
-    #--------------------------------------------------------------------------
-    #      Method: getTileNumber
+    #---------------------------------------------------------------------------
+    #      Method: get_tile_number
     #
-    # Description: Given the (x, y) coordinates for a location, measured in
-    #              tile blocks (rather than pixels), return its tile number.
+    # Description: Given the tile coordinates for a location, returns a
+    #              corresponding tile number.
     #
     #      Inputs: x - Horizontal coordinate, measured in tile blocks.
     #              y - Vertical coordinate, measured in tile blocks.
     #
     #     Outputs: Tile number for the location in question (or -1 if the
     #              coordinates are invalid).
-    #--------------------------------------------------------------------------
-    def getTileNumber(self, x, y):
-        if x < 0 or y < 0 or x >= self.mapWidth or y >= self.mapHeight:
+    #---------------------------------------------------------------------------
+    def get_tile_number(self, x, y):
+        if x < 0 or y < 0 or x >= self.map_width or y >= self.map_height:
             return -1
         return self.map[y][x] # y == row, x == column
 
-    #--------------------------------------------------------------------------
-    #      Method: getTileNumberAt
+    #---------------------------------------------------------------------------
+    #      Method: get_tile_number_at
     #
-    # Description: Given the (x, y) coordinates for a location, measured in
-    #              pixels (rather than tile blocks), return its tile number.
+    # Description: Given the pixel coordinates for a location, returns a
+    #              corresponding tile number.
     #
     #      Inputs: x - Horizontal coordinate, measured in pixels.
     #              y - Vertical coordinate, measured in pixels.
     #
     #     Outputs: Tile number for the location in question (or -1 if the
     #              coordinates are invalid).
-    #--------------------------------------------------------------------------
-    def getTileNumberAt(self, x, y):
-        (newX, newY) = self.tiles.getTileCoordsAt(x, y)
-        return self.getTileNumber(newX, newY)
+    #---------------------------------------------------------------------------
+    def get_tile_number_at(self, x, y):
+        (newX, newY) = self.tiles.get_tile_coords_at(x, y)
+        return self.get_tile_number(newX, newY)
 
-    #--------------------------------------------------------------------------
-    #      Method: getTile
+    #---------------------------------------------------------------------------
+    #      Method: get_tile
     #
     # Description: Given the (x, y) coordinates for a location, measured in
     #              tile blocks (rather than pixels), return its tile image. (If
@@ -123,29 +118,30 @@ class Map:
     #              y - Vertical coordinate, measured in tile blocks.
     #
     #     Outputs: Tile image for the location in question.
-    #--------------------------------------------------------------------------
-    def getTile(self, x, y):
-        if y >= self.mapHeight and x >= 0 and x < self.mapWidth:
-            y = self.mapHeight - 1
-        tileNum = self.getTileNumber(x, y)
-        return self.tiles.getTile(tileNum)
+    #---------------------------------------------------------------------------
+    def get_tile(self, x, y):
+        if y >= self.map_height and x >= 0 and x < self.map_width:
+            y = self.map_height - 1
+        tile_num = self.get_tile_number(x, y)
+        return self.tiles.get_image(tile_num)
 
-    #--------------------------------------------------------------------------
-    #      Method: isSolidAt
+    #---------------------------------------------------------------------------
+    #      Method: is_solid_at
     #
-    # Description: Determines whether a given location is solid.
+    # Description: Determines whether a given location is fully solid (not just
+    #              top-solid).
     #
     #      Inputs: x - Horizontal coordinate, measured in pixels.
     #              y - Vertical coordinate, measured in pixels.
     #
-    #     Outputs: 'True' if the location is solid, 'False' otherwise.
-    #--------------------------------------------------------------------------
-    def isSolidAt(self, x, y):
-        tileNum = self.getTileNumberAt(x, y)
-        return self.tiles.isSolid(tileNum)
+    #     Outputs: 'True' if the location is solid.
+    #---------------------------------------------------------------------------
+    def is_solid_at(self, x, y):
+        tile_num = self.get_tile_number_at(x, y)
+        return tile_num in SOLID_TILES
 
-    #--------------------------------------------------------------------------
-    #      Method: isNonSolidAt
+    #---------------------------------------------------------------------------
+    #      Method: is_non_solid_at
     #
     # Description: Determines whether a given location is non-solid (neither
     #              solid nor top-solid).
@@ -153,43 +149,34 @@ class Map:
     #      Inputs: x - Horizontal coordinate, measured in pixels.
     #              y - Vertical coordinate, measured in pixels.
     #
-    #     Outputs: 'True' if the location is non-solid, 'False' otherwise.
-    #--------------------------------------------------------------------------
-    def isNonSolidAt(self, x, y):
-        tileNum = self.getTileNumberAt(x, y)
-        return self.tiles.isNonSolid(tileNum)
+    #     Outputs: 'True' if the location is non-solid.
+    #---------------------------------------------------------------------------
+    def is_non_solid_at(self, x, y):
+        tile_num = self.get_tile_number_at(x, y)
+        return tile_num in NON_SOLID_TILES or tile_num is -1
 
-    #--------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #      Method: draw
     #
     # Description: Draws the currently-visible part of the map onto the screen.
     #
-    #      Inputs: leftCol - Pixel coordinate for the first column to be
-    #                        displayed (i.e., the far left column).
-    #              topRow  - Pixel coordinate for the first row to be displayed
-    #                        (i.e., the top row).
+    #      Inputs: left_col - Pixel coordinate for first column to draw.
+    #              top_row  - Pixel coordinate for first row to draw.
     #
     #     Outputs: None.
-    #--------------------------------------------------------------------------
-    def draw(self, leftCol, topRow):
-        # Apply the background color:
-        self.screen.fill(self.bgColor)
-
-        # Determine coordinates for the top-left tile, measured in tile blocks:
-        topLeftTileX = leftCol / MAP_TILE_SIZE
-        topLeftTileY = topRow  / MAP_TILE_SIZE
-
-        # Determine the offset from the tile's origin, measured in pixels:
-        pixelOffsetX = leftCol % MAP_TILE_SIZE
-        pixelOffsetY = topRow  % MAP_TILE_SIZE
-
-        # Draw each visible tile:
-        for screenY in range(SCREEN_SIZE_Y + 1):
-            mapY = screenY + topLeftTileY + 1
-            for screenX in range(SCREEN_SIZE_X + 1):
-                mapX = screenX + topLeftTileX + 1
-                tile = self.getTile(mapX, mapY)
+    #---------------------------------------------------------------------------
+    def draw(self, left_col, top_row):
+        self.screen.fill(self.bg_color)
+        top_left_tile_x = left_col / MAP_TILE_SIZE
+        top_left_tile_y = top_row  / MAP_TILE_SIZE
+        pixel_offset_x = left_col % MAP_TILE_SIZE
+        pixel_offset_y = top_row  % MAP_TILE_SIZE
+        for screen_y in range(self.screen_height / MAP_TILE_SIZE + 2):
+            map_y = screen_y + top_left_tile_y + 1
+            for screen_x in range(self.screen_width / MAP_TILE_SIZE + 1):
+                map_x = screen_x + top_left_tile_x + 1
+                tile = self.get_tile(map_x, map_y)
                 if tile:
-                    position = ((screenX * MAP_TILE_SIZE) - pixelOffsetX,
-                                (screenY * MAP_TILE_SIZE) - pixelOffsetY)
+                    position = ((screen_x * MAP_TILE_SIZE) - pixel_offset_x,
+                                (screen_y * MAP_TILE_SIZE) - pixel_offset_y)
                     self.screen.blit(tile, position)
