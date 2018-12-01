@@ -6,7 +6,7 @@
 #      Author: David C. Drake (https://davidcdrake.com)
 #
 # Description: Contains a 'ToadsAdventure' class for managing a platformer game
-#              developed using Python 2.7 and PyGame 1.9.
+#              developed using Python 2.7 and Pygame 1.9.
 #-------------------------------------------------------------------------------
 
 import sys
@@ -20,7 +20,7 @@ from config import *
 #-------------------------------------------------------------------------------
 #       Class: ToadsAdventure
 #
-# Description: Manages the "Toad's Adventure" platformer game.
+# Description: Manages the Toad's Adventure platformer game.
 #
 #     Methods: __init__, load_level, game_logic, paint
 #-------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ class ToadsAdventure(game.Game):
     #---------------------------------------------------------------------------
     #      Method: __init__
     #
-    # Description: Initializes "Toad's Adventure" and loads a given level.
+    # Description: Initializes Toad's Adventure and loads a given level.
     #
     #      Inputs: level                    - Number indicating desired level.
     #              map_tiles_filename       - Name of map tileset file.
@@ -133,7 +133,7 @@ class ToadsAdventure(game.Game):
 #-------------------------------------------------------------------------------
 #    Function: main
 #
-# Description: Creates and runs "Toad's Adventure." If a command-line integer is
+# Description: Creates and runs Toad's Adventure. If a command-line integer is
 #              provided, it may determine the starting level, otherwise the game
 #              starts at level 1.
 #

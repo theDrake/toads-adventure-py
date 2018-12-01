@@ -3,8 +3,8 @@
 #
 #      Author: David C. Drake (https://davidcdrake.com)
 #
-# Description: Handles maps/levels for the Toad's Adventure game. Developed
-#              using Python 2.7 and PyGame 1.9.
+# Description: Handles maps/levels for Toad's Adventure. Developed using Python
+#              2.7 and Pygame 1.9.
 #-------------------------------------------------------------------------------
 
 import pygame

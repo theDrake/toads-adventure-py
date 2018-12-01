@@ -4,7 +4,7 @@
 #      Author: David C. Drake (https://davidcdrake.com)
 #
 # Description: Manages player and non-player characters for Toad's Adventure.
-#              Developed using Python 2.7 and PyGame 1.9.
+#              Developed using Python 2.7 and Pygame 1.9.
 #-------------------------------------------------------------------------------
 
 import pygame
