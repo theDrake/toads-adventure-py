@@ -32,8 +32,8 @@ class Tileset:
         tileset_image = image.load(filename)
         (self.image_width, self.image_height) = tileset_image.get_size()
         self.tile_size = tile_size
-        self.cols = self.image_width  / self.tile_size
-        self.rows = self.image_height / self.tile_size
+        self.cols = self.image_width  // self.tile_size
+        self.rows = self.image_height // self.tile_size
         self.tiles = []
         y = 0
         for r in range(self.rows):
@@ -72,7 +72,7 @@ class Tileset:
     #     Outputs: A tuple containing tile coordinates.
     #---------------------------------------------------------------------------
     def get_tile_coords_at(self, x, y):
-        return (x / self.tile_size, y / self.tile_size)
+        return (x // self.tile_size, y // self.tile_size)
 
     #---------------------------------------------------------------------------
     #      Method: _is_valid_tile_num

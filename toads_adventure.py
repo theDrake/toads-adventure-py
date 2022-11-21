@@ -1,12 +1,11 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 #-------------------------------------------------------------------------------
 #    Filename: toads_adventure.py
 #
 #      Author: David C. Drake (https://davidcdrake.com)
 #
-# Description: Contains a 'ToadsAdventure' class for managing a platformer game
-#              developed using Python 2.7 and Pygame 1.9.
+# Description: Contains a 'ToadsAdventure' class for managing a platformer game.
 #-------------------------------------------------------------------------------
 
 import sys
@@ -120,13 +119,13 @@ class ToadsAdventure(game.Game):
     #---------------------------------------------------------------------------
     def paint(self, surface):
         # determine top-left pixel to be displayed
-        x = self.player.x - (self.width / 2)
-        y = self.player.y - (self.height / 2)
+        x = self.player.x - (self.width // 2)
+        y = self.player.y - (self.height // 2)
 
         # draw currently-visible map tiles and game characters
         self.map.draw(x, y)
-        self.player.draw((self.width / 2 - MAP_TILE_SIZE,
-                          self.height / 2 - MAP_TILE_SIZE))
+        self.player.draw((self.width // 2 - MAP_TILE_SIZE,
+                          self.height // 2 - MAP_TILE_SIZE))
         for NPC in self.NPCs:
             NPC.draw(x, y)
 

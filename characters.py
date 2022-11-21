@@ -4,7 +4,6 @@
 #      Author: David C. Drake (https://davidcdrake.com)
 #
 # Description: Manages player and non-player characters for Toad's Adventure.
-#              Developed using Python 2.7 and Pygame 1.9.
 #-------------------------------------------------------------------------------
 
 import pygame
@@ -217,7 +216,7 @@ class GameCharacter:
 
         # perform horizontal movement
         pixel_count = 0
-        for x in range(abs_x):
+        for x in range(int(abs_x)):
             if self.is_colliding(self.x + (1 * sign_x), self.y):
                 self.dx == 0.0
                 break
@@ -226,7 +225,7 @@ class GameCharacter:
                 pixel_count += 1
 
         # perform vertical movement
-        for y in range(abs_y):
+        for y in range(int(abs_y)):
             if self.is_colliding(self.x, self.y + (1 * sign_y)):
                 self.dy == 0.0
                 break
@@ -283,8 +282,8 @@ class GameCharacter:
         right = x + (CHARACTER_TILE_SIZE - 1) - self.width_offset
         top = y + self.height_offset
         bottom = y + (CHARACTER_TILE_SIZE - 1)
-        mid_x = x + CHARACTER_TILE_SIZE / 2
-        mid_y = y + CHARACTER_TILE_SIZE / 2
+        mid_x = x + CHARACTER_TILE_SIZE // 2
+        mid_y = y + CHARACTER_TILE_SIZE // 2
 
         if (self.map.is_solid_at(left, top) or
             self.map.is_solid_at(right, top) or
@@ -378,7 +377,7 @@ class GameCharacter:
     #     Outputs: Tile number of map tile behind the character.
     #---------------------------------------------------------------------------
     def get_tile_number_behind(self):
-        return self.map.get_tile_number_at(self.x + CHARACTER_TILE_SIZE / 2,
+        return self.map.get_tile_number_at(self.x + CHARACTER_TILE_SIZE // 2,
                                            self.y + CHARACTER_TILE_SIZE - 1)
 
     #---------------------------------------------------------------------------
@@ -393,7 +392,7 @@ class GameCharacter:
     #     Outputs: Tile number of map tile underneath the character.
     #---------------------------------------------------------------------------
     def get_tile_number_below(self):
-        return self.map.get_tile_number_at(self.x + CHARACTER_TILE_SIZE / 2,
+        return self.map.get_tile_number_at(self.x + CHARACTER_TILE_SIZE // 2,
                                            self.y + CHARACTER_TILE_SIZE + 1)
 
     #---------------------------------------------------------------------------
@@ -407,8 +406,8 @@ class GameCharacter:
     #     Outputs: The rounded-up integer value.
     #---------------------------------------------------------------------------
     def round_up(self, n):
-        minimum = MIN_PIXELS_PER_FRAME
-        return ((int(math.ceil(n)) + (minimum - 1)) / minimum) * minimum
+        return ((int(math.ceil(n)) + (MIN_PIXELS_PER_FRAME - 1)) /
+                MIN_PIXELS_PER_FRAME) * MIN_PIXELS_PER_FRAME
 
 #-------------------------------------------------------------------------------
 #       Class: PlayerCharacter
@@ -699,13 +698,13 @@ class PlayerCharacter(GameCharacter):
     #---------------------------------------------------------------------------
     def pose_and_pause(self, pose, pause):
         # draw map again to erase player's previous tile
-        x = self.x - (self.map.screen_width / 2)
-        y = self.y - (self.map.screen_height / 2)
+        x = self.x - (self.map.screen_width // 2)
+        y = self.y - (self.map.screen_height // 2)
         self.map.draw(x, y)
 
         # draw desired pose, then pause the game
-        position = (self.map.screen_width / 2 - MAP_TILE_SIZE,
-                    self.map.screen_height / 2 - MAP_TILE_SIZE)
+        position = (self.map.screen_width // 2 - MAP_TILE_SIZE,
+                    self.map.screen_height // 2 - MAP_TILE_SIZE)
         self.screen.blit(self.tiles.get_image(pose), position)
         display.flip()
         time.sleep(pause)

@@ -3,7 +3,7 @@
 #
 #      Author: David C. Drake (https://davidcdrake.com)
 #
-# Description: Contains an abstract 'Game' class (Python 2.7 and Pygame 1.9).
+# Description: Contains an abstract 'Game' class.
 #-------------------------------------------------------------------------------
 
 import pygame

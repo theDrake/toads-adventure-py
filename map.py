@@ -153,7 +153,7 @@ class Map:
     #---------------------------------------------------------------------------
     def is_non_solid_at(self, x, y):
         tile_num = self.get_tile_number_at(x, y)
-        return tile_num in NON_SOLID_TILES or tile_num is -1
+        return tile_num in NON_SOLID_TILES or tile_num == -1
 
     #---------------------------------------------------------------------------
     #      Method: draw
@@ -167,13 +167,13 @@ class Map:
     #---------------------------------------------------------------------------
     def draw(self, left_col, top_row):
         self.screen.fill(self.bg_color)
-        top_left_tile_x = left_col / MAP_TILE_SIZE
-        top_left_tile_y = top_row  / MAP_TILE_SIZE
+        top_left_tile_x = left_col // MAP_TILE_SIZE
+        top_left_tile_y = top_row  // MAP_TILE_SIZE
         pixel_offset_x = left_col % MAP_TILE_SIZE
         pixel_offset_y = top_row  % MAP_TILE_SIZE
-        for screen_y in range(self.screen_height / MAP_TILE_SIZE + 2):
+        for screen_y in range(self.screen_height // MAP_TILE_SIZE + 2):
             map_y = screen_y + top_left_tile_y + 1
-            for screen_x in range(self.screen_width / MAP_TILE_SIZE + 1):
+            for screen_x in range(self.screen_width // MAP_TILE_SIZE + 1):
                 map_x = screen_x + top_left_tile_x + 1
                 tile = self.get_tile(map_x, map_y)
                 if tile:
