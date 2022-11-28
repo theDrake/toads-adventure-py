@@ -154,12 +154,12 @@ class GameCharacter:
             friction_per_frame = DEFAULT_FRICTION_PER_FRAME
         if self.dx > 0.0:
             if self.dx - friction_per_frame < 0.0:
-                self.dx == 0.0
+                self.dx = 0.0
             else:
                 self.push_x(friction_per_frame * -1.0)
         elif self.dx < 0.0:
             if self.dx + friction_per_frame > 0.0:
-                self.dx == 0.0
+                self.dx = 0.0
             else:
                 self.push_x(friction_per_frame)
 
@@ -218,7 +218,7 @@ class GameCharacter:
         pixel_count = 0
         for x in range(int(abs_x)):
             if self.is_colliding(self.x + sign_x, self.y):
-                self.dx == 0.0
+                self.dx = 0.0
                 break
             else:
                 self.x += sign_x
@@ -227,7 +227,7 @@ class GameCharacter:
         # perform vertical movement
         for y in range(int(abs_y)):
             if self.is_colliding(self.x, self.y + sign_y):
-                self.dy == 0.0
+                self.dy = 0.0
                 break
             else:
                 self.y += sign_y
