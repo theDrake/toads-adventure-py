@@ -217,20 +217,20 @@ class GameCharacter:
         # perform horizontal movement
         pixel_count = 0
         for x in range(int(abs_x)):
-            if self.is_colliding(self.x + (1 * sign_x), self.y):
+            if self.is_colliding(self.x + sign_x, self.y):
                 self.dx == 0.0
                 break
             else:
-                self.x += (1 * sign_x)
+                self.x += sign_x
                 pixel_count += 1
 
         # perform vertical movement
         for y in range(int(abs_y)):
-            if self.is_colliding(self.x, self.y + (1 * sign_y)):
+            if self.is_colliding(self.x, self.y + sign_y):
                 self.dy == 0.0
                 break
             else:
-                self.y += (1 * sign_y)
+                self.y += sign_y
 
         # adjust character's stance as appropriate
         if self.stances > 1:
@@ -406,7 +406,7 @@ class GameCharacter:
     #     Outputs: The rounded-up integer value.
     #---------------------------------------------------------------------------
     def round_up(self, n):
-        return ((int(math.ceil(n)) + (MIN_PIXELS_PER_FRAME - 1)) /
+        return ((int(math.ceil(n)) + (MIN_PIXELS_PER_FRAME - 1)) //
                 MIN_PIXELS_PER_FRAME) * MIN_PIXELS_PER_FRAME
 
 #-------------------------------------------------------------------------------
